@@ -1,7 +1,27 @@
-
 const express = require('express');
 
 const app = express();
+
+app.use(express.json()); // Pour gérer la requête POST venant de l'application front-end, 
+//on a besoin d'en extraire le corps JSON avec ce middleware très simple mis à disposition par le framework Express
+
+// Avec ceci, Express prend toutes les requêtes qui ont comme Content-Type  application/json  et met à disposition leur body  directement 
+// sur l'objet req, ce qui nous permet d'écrire le middleware POST suivant :
+
+app.post('/api/stuff', (req, res, next) => {
+  console.log(req.body);
+  res.status(201).json({
+    message: 'Objet créé !'
+  });
+});
+
+// Veillez à :
+// soit modifier la méthode  use  en  get  pour le middleware des requêtes GET ;
+// soit placer la route POST au-dessus du middleware pour les requêtes GET, car la logique GET 
+// interceptera actuellement toutes les requêtes envoyées à votre endpoint /api/stuff , 
+// étant donné qu'on ne lui a pas indiqué de verbe spécifique. 
+// Placer la route POST au-dessus interceptera les requêtes POST, en les empêchant d'atteindre le middleware GET.
+
 
 /* 
 // Cette application Express contient quatre éléments de middleware :
@@ -26,13 +46,14 @@ app.use((req, res, next) => { // le dernier élément de middleware enregistre �
   console.log('Réponse envoyée avec succès !');
 });
 
-module.exports = app; */
+ */
 
 
 // Nous ajoutons des headers à notre objet "response" pour permettre permettra aux 2 origine de communiquer entre elles
 // (soit localhost:3000 et localhost:4200).
 // Cela permettra d'éviter l'erreur de CORS (« Cross Origin Resource Sharing »), système de sécurité qui bloque par défault
 // les appels HTTP entre serveurs différents,  ce qui empêche donc les requêtes malveillantes d'accéder à des ressources sensibles.
+
 app.use((req, res, next) => { 
   res.setHeader('Access-Control-Allow-Origin', '*');
   // On accède à notre API depuis n'importe quelle origine ( '*' ) ;
@@ -46,7 +67,7 @@ app.use((req, res, next) => {
 app.use('/api/stuff', (req, res, next) => {
 
 // on passe en paramètre de la méthode "use" un string correspondant à la route pour laquelle nous souhaitons enregistrer 
-// cet élément de middleware. Dans ce cas, cette route serahttp://localhost:3000/api/stuff , 
+// cet élément de middleware. Dans ce cas, cette route sera http://localhost:3000/api/stuff , 
 // car il s'agit de l'URL demandée par l'application front-end.
   
 const stuff = [ // Dans ce middleware, nous créons un groupe d'articles avec le schéma de données spécifique requis par le front-end.
@@ -69,3 +90,5 @@ const stuff = [ // Dans ce middleware, nous créons un groupe d'articles avec le
   ];
   res.status(200).json(stuff); // Nous envoyons ensuite ces articles sous la forme de données JSON, avec un code 200 pour une demande réussie.
 });
+
+module.exports = app;
