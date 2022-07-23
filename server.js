@@ -1,4 +1,6 @@
-const http = require('http');
+// Ce fichier contient le server Node :
+
+const http = require('http'); // importation du package HTTP natif de Node qu'on utilisera pour créer un serveur
 const app = require('./app');
 
 const normalizePort = val => {  // la fonction normalizePort renvoie un port valide, qu'il soit fourni sous la forme d'un numéro ou d'une chaîne ;
@@ -12,7 +14,7 @@ const normalizePort = val => {  // la fonction normalizePort renvoie un port val
   }
   return false;
 };
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || '3000');  // soit la variable d'environnement du port si la plateforme de déploiement propose un port par défaut ou sinon sur le port 3000
 app.set('port', port);
 
 const errorHandler = error => { // la fonction errorHandler  recherche les différentes erreurs et les gère de manière appropriée. Elle est ensuite enregistrée dans le serveur ;

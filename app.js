@@ -1,6 +1,18 @@
+// Ce fichier est relatif à notre application Express (que nous allons créer ici):
+
 const express = require('express');
 
+// Importation de mongoose dans le fichier app.js en ajoutant la constante suivante :
+const mongoose = require('mongoose');
+
 const app = express();
+
+mongoose.connect('mongodb+srv://Doppler123:pDfisWmfNbGtILXW@cluster0.o9nitgb.mongodb.net/?retryWrites=true&w=majority',
+  { useNewUrlParser: true,
+    useUnifiedTopology: true })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
+
 
 app.use(express.json()); // Pour gérer la requête POST venant de l'application front-end, 
 //on a besoin d'en extraire le corps JSON avec ce middleware très simple mis à disposition par le framework Express
@@ -22,32 +34,8 @@ app.post('/api/stuff', (req, res, next) => {
 // étant donné qu'on ne lui a pas indiqué de verbe spécifique. 
 // Placer la route POST au-dessus interceptera les requêtes POST, en les empêchant d'atteindre le middleware GET.
 
-
-/* 
-// Cette application Express contient quatre éléments de middleware :
+// Une application Express contient des middlewares :
 // 1 middleware = 1 fonction dans une application express qui reçoit la requête et la réponse, qui les gère et qui peut ensuite passer l'éxécution à un prochain middleware 
-
-app.use((req, res, next) => { // le premier enregistre « Requête reçue ! » dans la console et passe l'exécution ;
-  console.log('Requête reçue !');
-  next(); // sans cette ligne, on ne renvoit pas de réponse et la requête ne se termine pas
-});
-
-app.use((req, res, next) => { // le deuxième ajoute un code d'état 201 à la réponse et passe l'exécution ;
-  res.status(201);
-  next();
-});
-
-app.use((req, res, next) => { // le troisième envoie la réponse JSON et passe l'exécution ;
-  res.json({ message: 'Votre requête a bien été reçue !' }); 
-  next();
-});
-
-app.use((req, res, next) => { // le dernier élément de middleware enregistre « Réponse envoyée avec succès ! » dans la console.
-  console.log('Réponse envoyée avec succès !');
-});
-
- */
-
 
 // Nous ajoutons des headers à notre objet "response" pour permettre permettra aux 2 origine de communiquer entre elles
 // (soit localhost:3000 et localhost:4200).
@@ -92,3 +80,4 @@ const stuff = [ // Dans ce middleware, nous créons un groupe d'articles avec le
 });
 
 module.exports = app;
+
