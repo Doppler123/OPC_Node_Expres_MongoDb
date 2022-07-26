@@ -17,6 +17,9 @@ const stuffRoutes = require('./routes/stuff');
 // On importe le routeur relatif aux utilisateurs :
 const userRoutes = require('./routes/user');
 
+// On réalise une nouvelle importantion pour accéder au path de notre serveur :
+const path = require('path');
+
 mongoose.connect('mongodb+srv://Doppler123:pDfisWmfNbGtILXW@cluster0.o9nitgb.mongodb.net/?retryWrites=true&w=majority',
   {
     useNewUrlParser: true,
@@ -45,7 +48,11 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.use('/api/stuff', stuffRoutes); // Nous enregistrons notre routeur pour toutes les demandes effectuées vers /api/stuff 
+// On ajoute ce gestionnaire de routage :
+app.use('/images', express.static(path.join(__dirname, 'images'))); // On configure serveur pour renvoyer des fichiers statiques pour une route donnée avec  express.static() et  path.join()
+
+// On enregistre notre routeur pour toutes les demandes effectuées vers /api/stuff :
+app.use('/api/stuff', stuffRoutes); 
 
 // On enregistre le routeur relatif aux utilisateurs :
 app.use('/api/auth', userRoutes);
